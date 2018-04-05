@@ -6,7 +6,6 @@ import (
 	"log"
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"github.com/Azunyan1111/go_wordpress/structs"
 	"fmt"
 	"github.com/jinzhu/gorm"
@@ -81,15 +80,16 @@ func WpPost(title string,content string,times time.Time,categories []string, reT
 
 	// 実行
 	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Println(err)
-		return WpPost(title,content,times,categories,reTry - 1)
-	}
-	s,err := ioutil.ReadAll(resp.Body)
-	if err != nil{
-		log.Println(err)
-		return fmt.Errorf("Error: ioutil Read error",nil)
-	}
+	//if err != nil {
+	//	log.Println(err)
+	//	return WpPost(title,content,times,categories,reTry - 1)
+	//}
+	log.Println("WP Post Status Code:",resp.StatusCode)
+	//s,err := ioutil.ReadAll(resp.Body)
+	//if err != nil{
+	//	log.Println(err)
+	//	return fmt.Errorf("Error: ioutil Read error",nil)
+	//}
 	return nil
 }
 

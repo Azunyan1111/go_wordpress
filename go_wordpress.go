@@ -90,7 +90,6 @@ func WpPost(title string,content string,times time.Time,categories []string, reT
 		log.Println(err)
 		return fmt.Errorf("Error: ioutil Read error",nil)
 	}
-	log.Println(string(s))
 	return nil
 }
 

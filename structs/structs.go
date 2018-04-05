@@ -66,6 +66,24 @@ type CateDbTaxonomy struct {
 	Count     int `gorm:"column:count"`
 }
 
+type Count struct{
+	Id int `gorm:"column:id"`
+	Count int `gorm:"column:count"`
+}
+
+type PostDb struct {
+	Id int `gorm:"column:ID"`
+	PostTitle string `gorm:"column:post_title"`
+}
+
+func (PostDb) TableName() string {
+	return "wp_posts"
+}
+
+func (Count) TableName() string {
+	return "counts"
+}
+
 func (CateDb) TableName() string {
 	return "wp_terms"
 }

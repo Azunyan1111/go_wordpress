@@ -12,6 +12,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
 	"net/url"
+	"os"
 )
 
 var (
@@ -26,12 +27,18 @@ var (
 
 var Db *gorm.DB
 
-//func main() {
-//	fast()
-//	if err := WpPost("Title","Content",time.Now(),[]string{"カテゴリ1","カテゴリ2","カテゴリ4"},10); err != nil{
-//		log.Println(err)
-//	}
-//}
+func main() {
+	var (
+		ApiBaseUrl  = os.Getenv("ApiBaseUrl")
+		User  = os.Getenv("User")
+		Pass  = os.Getenv("Pass")
+		DbUrl = os.Getenv("DbUrl")
+		DbUser = os.Getenv("DbUser")
+		DbPass = os.Getenv("DbPass")
+		DbName = os.Getenv("DbName")
+	)
+	Fast(ApiBaseUrl,User,Pass,DbUrl,DbUser,DbPass,DbName)
+}
 
 func Fast(baseURL string,wpUser string,wpPass string,dbURL string,dbUser string,dbPass string,dbName string){
 	WORDPRESS_API_BASE_URL  = baseURL
@@ -42,7 +49,7 @@ func Fast(baseURL string,wpUser string,wpPass string,dbURL string,dbUser string,
 	WORDPRESS_DB_PASS = dbPass
 	WORDPRESS_DB_NAME = dbName
 
-	db,err := gorm.Open("mysql",WORDPRESS_DB_USER+":"+WORDPRESS_DB_PASS+"@"+"tcp("+WORDPRESS_DB_URL+":3306)/"+WORDPRESS_DB_NAME)
+	db,err := gorm.Open("mysql",WORDPRESS_DB_USER+":"+WORDPRESS_DB_PASS+"@"+"tcp("+WORDPRESS_DB_URL+")/"+WORDPRESS_DB_NAME)
 	if err != nil{
 		log.Println("Error:db conntection found")
 		panic(err)
@@ -119,4 +126,29 @@ func SearchCategory(s string)structs.CateDb{
 	cate := structs.CateDb{}
 	Db.Find(&cate,"name = ?",s)
 	return cate
+}
+
+func PostExist(s string) bool{
+	p := structs.PostDb{}
+	Db.Find(&p,"post_title = ?",s)
+	if p.Id == 0{
+		return false
+	}else{
+		return true
+	}
+}
+
+func GetCount() int{
+	c := structs.Count{}
+	c.Id = 1
+	Db.Find(&c)
+	return c.Count
+}
+
+func SetCount(i int){
+	c := structs.Count{}
+	c.Id = 1
+	Db.Find(&c)
+	c.Count = i
+	Db.Save(&c)
 }
